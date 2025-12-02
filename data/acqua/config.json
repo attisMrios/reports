@@ -1,0 +1,20 @@
+{
+    "name": "acqua",
+    "engine": "handlebars",
+    "recipe": "chrome-pdf",
+    "data": {
+        "shortid": "2gs0fIjmb"
+    },
+    "shortid": "h38Ec5EuL",
+    "chrome": {
+        "printBackground": true
+    },
+    "creationDate": {
+        "$$date": 1764419714925
+    },
+    "modificationDate": {
+        "$$date": 1764692172088
+    },
+    "_id": "0ECDRKvmdj0jw8gj",
+    "$entitySet": "templates"
+}

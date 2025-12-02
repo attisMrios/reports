@@ -1,0 +1,20 @@
+{
+    "name": "acqua_hills",
+    "engine": "handlebars",
+    "recipe": "chrome-pdf",
+    "data": {
+        "shortid": "2gs0fIjmb"
+    },
+    "shortid": "rUuvHOUIX",
+    "chrome": {
+        "printBackground": true
+    },
+    "creationDate": {
+        "$$date": 1764692041132
+    },
+    "modificationDate": {
+        "$$date": 1764692183265
+    },
+    "_id": "2ONxLjM5BYQAveS3",
+    "$entitySet": "templates"
+}

@@ -1,0 +1,15 @@
+ <!-- Cabecera -->
+  <header>
+    <img src="{{asset 'logo_acquahills.png' 'dataURI'}}" alt="Logo Empresa" />
+    <div class="company-info">
+      <strong>{{empresa.nombre}}</strong>
+      NIT: {{empresa.nit}}<br />
+      Dirección: {{empresa.direccion}}<br />
+      Tel: {{empresa.telefono}}<br />
+      Email: {{empresa.email}}
+    </div>
+    <div class="doc-info">
+      {{documento.tipo}}<br />
+      Nº {{documento.numero}}
+    </div>
+  </header>

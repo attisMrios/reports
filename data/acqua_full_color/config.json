@@ -1,0 +1,29 @@
+{
+    "name": "acqua_full_color",
+    "engine": "handlebars",
+    "recipe": "chrome-pdf",
+    "data": {
+        "shortid": "2gs0fIjmb"
+    },
+    "shortid": "D33ENiZAXv",
+    "chrome": {
+        "printBackground": true,
+        "marginTop": "2cm",
+        "marginBottom": "2cm"
+    },
+    "creationDate": {
+        "$$date": 1764380686247
+    },
+    "modificationDate": {
+        "$$date": 1764692316136
+    },
+    "_id": "q409SYpois0VErtG",
+    "$entitySet": "templates",
+    "pdfOperations": [
+        {
+            "type": "merge",
+            "templateShortid": "pKd472-",
+            "mergeWholeDocument": true
+        }
+    ]
+}

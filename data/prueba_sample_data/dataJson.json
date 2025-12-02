@@ -1,0 +1,39 @@
+{
+  "empresa": {
+    "nombre": "CONJUNTO CERRADO ACQUA HILLS",
+    "nit": "901623033-5",
+    "telefono": "3245788663",
+    "direccion": "Dg 3 34T 02 Sect. vía Japón Frailes",
+    "email": "conjuntoacquahillsph@gmail.com"
+  },
+  "documento": {
+    "tipo": "CUENTA DE COBRO",
+    "numero": "14841"
+  },
+  "cliente": "Juan Pérez",
+  "fecha": "2025-11-28",
+  "detalle": [
+    {
+      "concepto": "Expensas comunes",
+      "saldoAnterior": 0,
+      "valorMes": 165000,
+      "intereses": 0,
+      "total": 165000
+    },
+    {
+      "concepto": "Administración parque acuático",
+      "saldoAnterior": 0,
+      "valorMes": 37000,
+      "intereses": 0,
+      "total": 37000
+    },
+    {
+      "concepto": "Seguro de áreas comunes",
+      "saldoAnterior": 70000,
+      "valorMes": 0,
+      "intereses": 0,
+      "total": 70000
+    }
+  ],
+  "totalGeneral": 272000
+}

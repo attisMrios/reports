@@ -1,0 +1,219 @@
+<html>
+  <head>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 40px; color: #333; }
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        border-bottom: 3px solid #2c3e50;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+      }
+      header img { height: 90px; margin-right: 20px; }
+      header .company-info { text-align: center; line-height: 1.4; flex: 1; }
+      header .doc-info { text-align: right; font-weight: bold; color: #2c3e50; font-size: 1.2em; }
+
+      /* Aviso importante */
+      .important-box {
+        background-color: #f9f9f9;
+        padding: 12px;
+        margin-bottom: 20px;
+        text-align: center;
+        font-size: 12px;
+        font-weight: bold;
+        color: #2c3e50;
+      }
+      .important-box span {
+        color: #b22222; /* rojo para resaltar */
+      }
+
+      /* Bloques debajo de la cabecera */
+      .info-section {
+        display: flex;
+        justify-content: space-between;
+      }
+      .client-box {
+        flex: 2;
+        border: 1px solid #2c3e50;
+        padding: 10px;
+        margin-right: 10px;
+      }
+      .client-box table { width: 100%; border-collapse: collapse; }
+      .client-box td { padding: 2px; font-size: 12px; }
+      .client-box strong { color: #2c3e50; }
+
+      .payment-box {
+        flex: 0 0 160px;
+        border: 1px solid #2c3e50;
+        padding: 8px;
+        text-align: center;
+      }
+      .payment-box strong { display: block; margin-bottom: 5px; color: #2c3e50; }
+
+      /* Shape para detalle del documento */
+      .detail-box {
+        border: 1px solid #2c3e50;
+        padding: 10px;
+        margin-top: 10px;
+      }
+      .detail-box h2 {
+        margin-top: 0;
+        color: #2c3e50;
+      }
+      .detail-box table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+      .detail-box th, .detail-box td {
+        border: 1px solid #ccc;
+        padding: 8px;
+        text-align: left;
+        font-size: 12px;
+      }
+      .detail-box th {
+        background-color: #f4f4f4;
+        color: #2c3e50;
+      }
+      .detail-box tfoot td {
+        font-weight: bold;
+        border-top: 2px solid #2c3e50;
+      }
+
+      /* Footer-box con imagen y QR */
+      .footer-box {
+        margin-top: 10px;
+        background-color: #015bb9;
+      }
+      .footer-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+      .footer-img { width: 500px; border-radius: 5px; }
+      .qr-container { text-align: center; }
+      .footer-qr {
+        width: 200px;
+        height: 200px;
+        display: block;
+        margin: 0 auto;
+      }
+      .qr-text {
+        font-weight: bold;
+        margin-bottom: 10px;
+        margin-left: 5px;
+        margin-right: 5px;
+        text-align: center;
+      }
+      .highlight { color: #FFD700; }
+
+      footer {
+        margin-top: 20px;
+        border-top: 2px solid #ccc;
+        padding-top: 10px;
+        font-size: 0.9em;
+        text-align: center;
+        color: #555;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Cabecera -->
+    <header>
+      <img src="{{empresa.logo}}" alt="Logo Empresa"/>
+      <div class="company-info">
+        <strong>{{empresa.nombre}}</strong><br/>
+        NIT: {{empresa.nit}}<br/>
+        Dirección: {{empresa.direccion}}<br/>
+        Tel: {{empresa.telefono}}<br/>
+        Email: {{empresa.email}}
+      </div>
+      <div class="doc-info">
+        {{documento.tipo}}<br/>
+        Nº {{documento.numero}}
+      </div>
+    </header>
+
+    <!-- Información del cliente y pago -->
+    <div class="info-section">
+      <div class="client-box">
+        <table>
+          <tr>
+            <td><strong>NOMBRE:</strong></td>
+            <td>DE LOS RÍOS GAVIRIA JUAN MANUEL</td>
+            <td><strong>NIT:</strong></td>
+            <td>9739711</td>
+          </tr>
+          <tr>
+            <td><strong>DIRECCIÓN:</strong></td>
+            <td>DG3 #34t02 T7 APTO 308</td>
+            <td><strong>REF. PAGO:</strong></td>
+            <td>7308</td>
+          </tr>
+        </table>
+      </div>
+      <div class="payment-box">
+        <strong>Páguese hasta</strong>
+        Enero 10 de 2026
+      </div>
+    </div>
+
+    <!-- Detalle del documento en shape -->
+    <div class="detail-box">
+      <table>
+        <thead>
+          <tr>
+            <th>Concepto</th>
+            <th>Saldo Ant.</th>
+            <th>Valor Mes</th>
+            <th>Intereses</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each detalle}}
+            <tr>
+              <td>{{this.concepto}}</td>
+              <td>${{this.saldoAnterior}}</td>
+              <td>${{this.valorMes}}</td>
+              <td>${{this.intereses}}</td>
+              <td>${{this.total}}</td>
+            </tr>
+          {{/each}}
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="4">Total General</td>
+            <td>${{totalGeneral}}</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <!-- Footer-box con imagen y QR -->
+    <div class="footer-box">
+      <div class="footer-content">
+        <img src="https://www.bancocajasocial.com/content/dam/bcs/contenido/imagenes-blog/0vxMggyPPMMUidkgD8Xr.jpg" 
+             alt="Banco Caja Social" class="footer-img"/>
+        <div class="qr-container">
+          <p class="qr-text">
+            Escanea este <span class="highlight">código QR</span> y realiza el pago de tu factura de administración de manera <span class="highlight">más ágil</span>
+          </p>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/d/d7/Commons_QR_code.png" alt="Código QR" class="footer-qr"/>
+        </div>
+      </div>
+    </div>
+
+<!-- Aviso importante -->
+    <div class="important-box">
+      AGRADECEMOS SU PAGO A TIEMPO. <br/>
+      Envíe su SOPORTE DE PAGO a <span>conjuntoacquahillsph@gmail.com</span>. <br/>
+      La REFERENCIA DE PAGO es <span>NUMÉRICA</span>, no introduzca letras, símbolos o espacios en ella.
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <p>Gracias por confiar en {{empresa.nombre}}. Este documento es generado automáticamente.</p>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,472 @@
+<html>
+
+<head>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 40px;
+      color: #333;
+      font-size: 12px;
+      background-color: #fafafa;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      background: linear-gradient(135deg, #00A8CC 0%, #0099BB 100%);
+      padding: 20px;
+      margin: -40px -40px 10px -40px;
+      box-shadow: 0 2px 8px rgba(0, 168, 204, 0.2);
+      border-radius: 0 0 8px 8px;
+      color: white;
+    }
+
+    header img {
+      height: 90px;
+      margin-right: 20px;
+      border-radius: 4px;
+      margin-top: 10px;
+    }
+
+    header .company-info {
+      text-align: center;
+      line-height: 1.6;
+      flex: 1;
+      color: white;
+    }
+    
+    header .company-info strong {
+      font-size: 18px;
+      display: block;
+    }
+
+    header .doc-info {
+      text-align: right;
+      font-weight: bold;
+      color: #E8F5E9;
+      font-size: 1.2em;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 10px 15px;
+      border-radius: 5px;
+    }
+
+    .important-box {
+      background-color: #e1f8fd;
+      padding: 15px;
+      margin-bottom: 20px;
+      margin-top: 10px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: bold;
+      border-radius: 4px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+
+    .important-box span {
+      color: #b22222;
+      /* rojo para resaltar */
+    }
+
+    /* Bloques debajo de la cabecera */
+    .info-section {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .client-box {
+      flex: 2;
+      border: 1px solid #e0e0e0;
+      padding: 15px;
+      margin-right: 10px;
+      background: white;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+
+    .client-box table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .client-box td {
+      padding: 2px;
+      font-size: 12px;
+    }
+
+    .client-box strong {
+      color: #2c3e50;
+    }
+
+    .payment-box {
+      flex: 0 0 160px;
+      background: linear-gradient(135deg, #26A69A 0%, #009688 100%);
+      border: none;
+      padding: 15px;
+      text-align: center;
+      color: white;
+      border-radius: 6px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .payment-box strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #E8F5E9;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .detail-box {
+      border: 1px solid #e0e0e0;
+      padding: 15px;
+      background: white;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+
+    .detail-box h2 {
+      margin-top: 0;
+      color: #2c3e50;
+    }
+
+    .detail-box table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    .detail-box th,
+    .detail-box td {
+      border: 1px solid #e0e0e0;
+      padding: 5px;
+      text-align: left;
+      font-size: 12px;
+    }
+
+    .detail-box th {
+      background: linear-gradient(135deg, #00A8CC 0%, #0099BB 100%);
+      color: white;
+      font-weight: 600;
+    }
+    
+    .detail-box tbody tr:nth-child(odd) {
+      background-color: #f9f9f9;
+    }
+    
+    .detail-box tbody tr:nth-child(even) {
+      background-color: #ffffff;
+    }
+    
+    .detail-box tbody tr:hover {
+      background-color: #f0f8ff;
+    }
+
+    /* Footer-box con imagen y QR */
+    .footer-box {
+      margin-top: 10px;
+      margin-bottom: 10px;
+      background-color: #015bb9;
+      padding: 0;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 0;
+    }
+
+    .qr-container {
+      text-align: center;
+      color: white;
+    }
+
+    .footer-qr {
+      width: 150px;
+      height: 150px;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .qr-text {
+      font-weight: bold;
+      margin-bottom: 10px;
+      margin-left: 5px;
+      margin-right: 5px;
+      text-align: center;
+      color:#ccc
+    }
+
+    .highlight {
+      color: #FFD700;
+    }
+
+    /* Signature & Acceptance */
+    .signature-acceptance-container {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+    }
+
+    .signature-section {
+      flex: 0 0 250px;
+      text-align: center;
+      padding-top: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .signature-image {
+      width: 100%;
+      height: auto;
+      max-width: 120px;
+      margin: 0 auto 5px;
+      display: block;
+      order: 1;
+    }
+
+    .signature-line {
+      border-top: 1px solid #333;
+      width: 100%;
+      margin-bottom: 5px;
+      order: 2;
+    }
+
+    .signature-label {
+      font-size: 12px;
+      font-weight: bold;
+      color: #333;
+      order: 3;
+    }
+
+    .acceptance-text {
+      margin-top: 10px;
+      font-size: 10px;
+      color: #777;
+      text-align: justify;
+      border-left: 3px solid #ccc;
+      padding-left: 10px;
+    }
+
+    /* Aviso de aceptación */
+    .acceptance-text {
+      flex: 1;
+      padding: 15px;
+      background-color: #fffacd;
+      border-left: 4px solid #ffd700;
+      text-align: justify;
+      font-size: 12px;
+      line-height: 1.5;
+      color: #333;
+    }
+
+    .payment-summary-box {
+      background: linear-gradient(135deg, #006f87 0%, #0099BB 100%);
+      color: white;
+      padding: 0px 12px; /* reducido para controlar altura */
+      margin: 10px 0;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 72px; /* altura fija para evitar desplazamiento */
+      box-shadow: 0 6px 18px rgba(0, 168, 204, 0.25);
+      border: 2px solid rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+    }
+
+    .payment-summary-box .summary-item {
+      text-align: center;
+      flex: 1;
+      padding: 0 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .payment-summary-box .summary-item label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: rgba(230, 247, 251, 0.95);
+    }
+
+    .payment-summary-box .summary-item .value {
+      display: block;
+      font-size: 40px; /* valor más grande sin aumentar la caja */
+      font-weight: 800;
+      color: #ffc107;
+      line-height: 1;
+    }
+
+    .payment-summary-box .divider {
+      width: 2px;
+      height: 56px;
+      background-color: rgba(255, 255, 255, 0.22);
+      margin: 0 12px;
+    }
+
+    /* Instrucción bancaria */
+    .bank-instruction {
+      margin: 12px 0 0 0;
+      padding: 12px 16px;
+      background: #e9fbff;
+      color: #004b5a;
+      font-weight: 700;
+      text-align: center;
+      border-radius: 6px;
+      font-size: 13px;
+    }
+
+    footer {
+      margin-top: 43px;
+      margin-left: -40px;
+      margin-right: -40px;
+      margin-bottom: -40px;
+      background: linear-gradient(135deg, #00A8CC 0%, #0099BB 100%);
+      padding: 2px;
+      font-size: 0.9em;
+      text-align: center;
+      color: white;
+      border-radius: 8px 8px 0 0;
+      box-shadow: 0 -2px 8px rgba(0, 168, 204, 0.2);
+    }
+    
+    footer p {
+      margin: 0;
+      
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+  </style>
+</head>
+
+<body>
+ 
+
+  <!-- Información del cliente y pago -->
+  <div class="info-section">
+    <div class="client-box">
+      <table>
+        <tr>
+          <td><strong>NOMBRE:</strong></td>
+          <td>DE LOS RÍOS GAVIRIA JUAN MANUEL</td>
+          <td><strong>NIT:</strong></td>
+          <td>9739711</td>
+        </tr>
+        <tr>
+          <td><strong>DIRECCIÓN:</strong></td>
+          <td>DG3 #34t02 T7 APTO 308</td>
+          <td><strong>REF. PAGO:</strong></td>
+          <td>7308</td>
+        </tr>
+      </table>
+    </div>
+    <div class="payment-box">
+      <strong>Páguese hasta</strong>
+      Enero 10 de 2026
+    </div>
+  </div>
+
+  <!-- Detalle del documento en shape -->
+  <div class="detail-box">
+    <table>
+      <thead>
+        <tr>
+          <th>Concepto</th>
+          <th>Saldo Ant.</th>
+          <th>Valor Mes</th>
+          <th>Intereses</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each detalle}}
+        <tr>
+          <td>{{this.concepto}}</td>
+          <td>${{this.saldoAnterior}}</td>
+          <td>${{this.valorMes}}</td>
+          <td>${{this.intereses}}</td>
+          <td>${{this.total}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="4">Total General</td>
+          <td>${{totalGeneral}}</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <!-- Recuadro de Referencia de Pago y Total a Pagar -->
+  <div class="payment-summary-box">
+    <div class="summary-item">
+      <label>Referencia de Pago</label>
+      <span class="value">7308</span>
+    </div>
+    <div class="divider"></div>
+    <div class="summary-item">
+      <label>Valor Total a Pagar</label>
+      <span class="value">${{totalGeneral}}</span>
+    </div>
+  </div>
+
+  <div class="bank-instruction">Consigne en CAJA SOCIAL CTA CTE Nº 21004138043</div>
+
+  <!-- Footer-box con imagen y QR -->
+  <div class="footer-box">
+    <div class="footer-content">
+      <img src="{{asset 'mipagoamigo.png' 'dataURI'}}"
+        alt="Banco Caja Social" class="footer-img" />
+    </div>
+  </div>
+
+
+   <!-- Firma y Aviso (Restored Layout) -->
+  <div class="signature-acceptance-container">
+    <!-- Aviso importante -->
+    <div class="important-box">
+      AGRADECEMOS SU PAGO A TIEMPO. <br />
+      Envíe su SOPORTE DE PAGO a <span>conjuntoacquahillsph@gmail.com</span>. <br />
+      La REFERENCIA DE PAGO es <span>NUMÉRICA</span>, no introduzca letras, símbolos o espacios en ella.
+    </div>
+
+    <!-- Firma -->
+    <div class="signature-section">
+      <div class="signature-line"></div>
+      <img src="http://localhost:5488/assets/hYqP2SOuMS4wVQh7/content?v=1764424317184" alt="Firma del Administrador" class="signature-image" />
+      <div class="signature-label">Firma del Administrador</div>
+    </div>
+  </div>
+
+  <div class="acceptance-text">
+    <strong>Aviso Importante:</strong> Este documento se entiende aceptado si luego de 10 días calendario no se ha
+    presentado reclamación alguna.
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>G360co - Soluciones Inteligentes en Gestión | www.g360co.com</p>
+  </footer>
+</body>
+
+</html>
