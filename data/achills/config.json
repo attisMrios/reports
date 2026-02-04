@@ -1,0 +1,29 @@
+{
+    "name": "achills",
+    "engine": "handlebars",
+    "recipe": "chrome-pdf",
+    "data": {
+        "shortid": "2gs0fIjmb"
+    },
+    "shortid": "4Wx7MhVMk",
+    "chrome": {
+        "printBackground": true,
+        "marginTop": "2cm",
+        "marginBottom": "2cm"
+    },
+    "creationDate": {
+        "$$date": 1764694581548
+    },
+    "modificationDate": {
+        "$$date": 1764695233655
+    },
+    "_id": "Dm6FJYcZqVuQA4Pt",
+    "$entitySet": "templates",
+    "pdfOperations": [
+        {
+            "type": "merge",
+            "templateShortid": "EY2iato",
+            "mergeWholeDocument": true
+        }
+    ]
+}

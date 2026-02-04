@@ -355,11 +355,47 @@
       font-weight: 500;
       letter-spacing: 0.5px;
     }
+
+    /* Control de saltos de página para impresión */
+@media print {
+  .detail-box table {
+    page-break-inside: auto;
+  }
+  .detail-box tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+  .detail-box thead {
+    display: table-header-group; /* encabezado repetido */
+  }
+  .detail-box tfoot {
+    display: table-footer-group; /* pie repetido */
+  }
+  .signature-acceptance-container,
+  .acceptance-text {
+    page-break-inside: avoid; /* evita cortes en firma y aviso */
+  }
+}
+
   </style>
 </head>
 
 <body>
- 
+  <!-- Cabecera -->
+  <header>
+    <img src="{{asset 'logo_acquahills.png' 'dataURI'}}" alt="Logo Empresa" />
+    <div class="company-info">
+      <strong>{{empresa.nombre}}</strong>
+      NIT: {{empresa.nit}}<br />
+      Dirección: {{empresa.direccion}}<br />
+      Tel: {{empresa.telefono}}<br />
+      Email: {{empresa.email}}
+    </div>
+    <div class="doc-info">
+      {{documento.tipo}}<br />
+      Nº {{documento.numero}}
+    </div>
+  </header>
 
   <!-- Información del cliente y pago -->
   <div class="info-section">
