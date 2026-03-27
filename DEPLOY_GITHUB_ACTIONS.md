@@ -1,0 +1,127 @@
+# Deploy de jsreport con GitHub Actions
+
+**Dominio de producción:** [reports.g360co.com](https://reports.g360co.com)
+
+El workflow en `.github/workflows/deploy.yml` sube el código por SSH y reinicia la app con **PM2**. En producción se expone **HTTPS con Nginx** y **Let's Encrypt**; jsreport queda detrás del proxy en `127.0.0.1:5488` (puerto en `jsreport.config.json`).
+
+## 1) Secrets requeridos en GitHub
+
+En el repositorio: `Settings → Secrets and variables → Actions`.
+
+| Secret | Descripción |
+|--------|-------------|
+| `SSH_HOST` | IP o dominio del servidor (para SSH) |
+| `SSH_PORT` | Puerto SSH (normalmente `22`) |
+| `SSH_USER` | Usuario SSH |
+| `SSH_PRIVATE_KEY` | Llave privada en formato PEM |
+| `APP_DIR` | Ruta del proyecto en el servidor, p. ej. `/var/www/jsreport` |
+
+## 2) DNS y firewall
+
+### Dominio `reports.g360co.com`
+
+1. En el DNS de **g360co.com**, crea un registro **A** (y **AAAA** si usas IPv6) para el host **`reports`** apuntando a la **IP pública** del servidor Ubuntu.
+2. Espera la propagación (minutos u horas según el proveedor).
+3. Comprueba:
+
+```bash
+dig +short reports.g360co.com
+ping -c 2 reports.g360co.com
+```
+
+### Firewall (UFW, si lo usas)
+
+```bash
+sudo ufw allow OpenSSH
+sudo ufw allow 'Nginx Full'
+sudo ufw enable
+sudo ufw status
+```
+
+No abras el puerto `5488` al público si Nginx hace de proxy en 80/443; jsreport puede quedar solo accesible en `127.0.0.1:5488`.
+
+## 3) Dependencias en el servidor (una sola vez)
+
+- Node.js LTS (recomendado v20), alineado con el workflow.
+- `npm` (viene con Node).
+- PM2 global: `sudo npm install -g pm2`
+- Nginx y Certbot:
+
+```bash
+sudo apt update
+sudo apt install -y nginx certbot python3-certbot-nginx
+```
+
+## 4) Clonar o preparar `APP_DIR`
+
+El workflow copia el repo a `APP_DIR`. La primera vez el job crea la carpeta con `mkdir -p`. Tras el primer deploy tendrás el código y `ecosystem.config.cjs`.
+
+El usuario de deploy (`SSH_USER`) debe poder escribir en `APP_DIR` y ejecutar `pm2`.
+
+PM2 al reiniciar el servidor:
+
+```bash
+pm2 startup
+# Ejecuta el comando que PM2 muestre (con sudo)
+pm2 save
+```
+
+## 5) Nginx: sitio y proxy a jsreport
+
+1. Copia `deploy/nginx-jsreport.conf.example` a `/etc/nginx/sites-available/reports.g360co.com` (ya viene con `server_name reports.g360co.com` y rutas Let's Encrypt para ese host).
+2. Si **aún no** tienes certificado SSL, deja temporalmente **solo** un bloque `listen 80` con `server_name reports.g360co.com` y `proxy_pass http://127.0.0.1:5488;` (sin redirección 301 ni bloque 443), certifica con certbot y luego unifica con el ejemplo completo o deja que certbot inserte SSL.
+3. Enlaza el sitio y recarga Nginx:
+
+```bash
+sudo ln -sf /etc/nginx/sites-available/reports.g360co.com /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+4. Con jsreport en PM2 (`pm2 status`), verifica en el servidor:
+
+```bash
+curl -sS -o /dev/null -w "%{http_code}\n" http://127.0.0.1:5488/
+```
+
+## 6) Let's Encrypt (certificado TLS)
+
+Con Nginx sirviendo `reports.g360co.com` en el puerto 80:
+
+```bash
+sudo certbot --nginx -d reports.g360co.com
+```
+
+Certbot añadirá o ajustará los bloques SSL. Los certificados suelen quedar en:
+
+`/etc/letsencrypt/live/reports.g360co.com/`
+
+Renovación:
+
+```bash
+sudo certbot renew --dry-run
+```
+
+Si el archivo de ejemplo usa `ssl_dhparam` y aún no existe, certbot puede crearlo en la primera emisión o puedes comentar esa línea hasta que exista.
+
+## 7) URL pública del API jsreport
+
+| Uso | URL |
+|-----|-----|
+| Base (Studio, navegador) | `https://reports.g360co.com` |
+| Render API (típico) | `https://reports.g360co.com/api/report` |
+
+En clientes conviene usar la base `https://reports.g360co.com` sin puerto `5488`.
+
+## 8) Ejecutar deploy desde GitHub
+
+- Push a la rama `main`, o
+- `Actions → Deploy jsreport → Run workflow`.
+
+El job ejecuta `npm ci` en el runner, sube archivos a `APP_DIR`, `npm ci --omit=dev` en el servidor y **`pm2 reload`** (o **`pm2 start`** la primera vez) con `ecosystem.config.cjs`.
+
+## 9) Notas importantes
+
+- **fs-store**: `data/` es estado persistente; el workflow usa `rm: true` y **reemplaza** `APP_DIR`. Haz backup de `data/` o ajusta la estrategia de despliegue si no quieres perder plantillas entre deploys.
+- **Autenticación**: revisa `jsreport.config.json` antes de exponer el sitio (usuario/contraseña, `authentication.enabled`).
+- **Alternativa sin PM2**: `deploy/jsreport.service.example` con systemd y cambiar el último paso del workflow a `systemctl restart jsreport`.

@@ -357,7 +357,123 @@
     }
 
     /* Control de saltos de página para impresión */
+@page {
+  size: A4;
+  margin: 8mm;
+}
+
 @media print {
+  /* Compactar para asegurar que todo el formato entre en una sola hoja */
+  body {
+    margin: 0;
+    font-size: 11px;
+    background: #fff;
+    /* Reserva espacio para que el footer fijo no tape contenido */
+    padding-bottom: 18mm;
+  }
+
+  header {
+    margin: 0 0 6px 0;
+    padding: 12px;
+    border-radius: 0;
+  }
+
+  header img {
+    height: 70px;
+    margin-top: 0;
+  }
+
+  .company-info strong {
+    font-size: 15px;
+  }
+
+  .info-section,
+  .detail-box,
+  .payment-summary-box,
+  .bank-instruction,
+  .footer-box,
+  .signature-acceptance-container,
+  .acceptance-text,
+  footer {
+    margin-top: 6px !important;
+    margin-bottom: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .detail-box,
+  .client-box,
+  .payment-box,
+  .payment-summary-box,
+  .bank-instruction,
+  .important-box,
+  .acceptance-text {
+    padding: 8px !important;
+  }
+
+  .detail-box th,
+  .detail-box td {
+    padding: 4px;
+    font-size: 11px;
+  }
+
+  .payment-summary-box {
+    height: 54px;
+  }
+
+  .payment-summary-box .summary-item label {
+    font-size: 10px;
+    margin-bottom: 2px;
+  }
+
+  .payment-summary-box .summary-item .value {
+    font-size: 18px;
+  }
+
+  .payment-summary-box .divider {
+    height: 38px;
+    margin: 0 8px;
+  }
+
+  .footer-box {
+    margin-top: 6px !important;
+  }
+
+  .signature-acceptance-container {
+    gap: 8px;
+    page-break-inside: avoid;
+  }
+
+  .important-box {
+    font-size: 10px;
+    margin-top: 0;
+  }
+
+  .signature-section {
+    flex: 0 0 170px;
+    padding-top: 0;
+  }
+
+  .signature-image {
+    max-width: 90px;
+  }
+
+  .acceptance-text {
+    font-size: 10px;
+    line-height: 1.25;
+    page-break-inside: avoid;
+  }
+
+  footer {
+    position: fixed;
+    left: 8mm;
+    right: 8mm;
+    bottom: 8mm;
+    margin: 0 !important;
+    padding: 4px 6px;
+    border-radius: 4px;
+    z-index: 20;
+  }
+
   .detail-box table {
     page-break-inside: auto;
   }
@@ -366,14 +482,10 @@
     page-break-after: auto;
   }
   .detail-box thead {
-    display: table-header-group; /* encabezado repetido */
+    display: table-header-group;
   }
   .detail-box tfoot {
-    display: table-footer-group; /* pie repetido */
-  }
-  .signature-acceptance-container,
-  .acceptance-text {
-    page-break-inside: avoid; /* evita cortes en firma y aviso */
+    display: table-footer-group;
   }
 }
 
@@ -391,10 +503,6 @@
       Tel: {{empresa.telefono}}<br />
       Email: {{empresa.email}}
     </div>
-    <div class="doc-info">
-      {{documento.tipo}}<br />
-      Nº {{documento.numero}}
-    </div>
   </header>
 
   <!-- Información del cliente y pago -->
@@ -402,22 +510,22 @@
     <div class="client-box">
       <table>
         <tr>
-          <td><strong>NOMBRE:</strong></td>
-          <td>DE LOS RÍOS GAVIRIA JUAN MANUEL</td>
-          <td><strong>NIT:</strong></td>
-          <td>9739711</td>
+          <td><strong>TERCERO:</strong></td>
+          <td>{{cliente}}</td>
+          <td><strong>NIT CONJUNTO:</strong></td>
+          <td>{{empresa.nit}}</td>
         </tr>
         <tr>
-          <td><strong>DIRECCIÓN:</strong></td>
-          <td>DG3 #34t02 T7 APTO 308</td>
-          <td><strong>REF. PAGO:</strong></td>
-          <td>7308</td>
+          <td><strong>CONTACTO:</strong></td>
+          <td>{{empresa.telefono}}</td>
+          <td><strong>CORREO:</strong></td>
+          <td>{{empresa.email}}</td>
         </tr>
       </table>
     </div>
     <div class="payment-box">
-      <strong>Páguese hasta</strong>
-      Enero 10 de 2026
+      <strong>Fecha de cobro</strong>
+      {{fecha}}
     </div>
   </div>
 
@@ -427,37 +535,31 @@
       <thead>
         <tr>
           <th>Concepto</th>
-          <th>Saldo Ant.</th>
-          <th>Valor Mes</th>
-          <th>Intereses</th>
-          <th>Total</th>
+          <th>Valor a cobrar</th>
         </tr>
       </thead>
       <tbody>
         {{#each detalle}}
         <tr>
           <td>{{this.concepto}}</td>
-          <td>${{this.saldoAnterior}}</td>
-          <td>${{this.valorMes}}</td>
-          <td>${{this.intereses}}</td>
           <td>${{this.total}}</td>
         </tr>
         {{/each}}
       </tbody>
       <tfoot>
         <tr>
-          <td colspan="4">Total General</td>
+          <td>Total General</td>
           <td>${{totalGeneral}}</td>
         </tr>
       </tfoot>
     </table>
   </div>
 
-  <!-- Recuadro de Referencia de Pago y Total a Pagar -->
+  <!-- Recuadro de Total a Pagar -->
   <div class="payment-summary-box">
     <div class="summary-item">
-      <label>Referencia de Pago</label>
-      <span class="value">7308</span>
+      <label>Conceptos liquidados</label>
+      <span class="value">Ver detalle</span>
     </div>
     <div class="divider"></div>
     <div class="summary-item">

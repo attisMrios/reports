@@ -11,29 +11,28 @@
     "numero": "14841"
   },
   "cliente": "Juan Pérez",
-  "fecha": "2025-11-28",
+  "fecha": "2026-03-27",
   "detalle": [
     {
       "concepto": "Expensas comunes",
-      "saldoAnterior": 0,
-      "valorMes": 165000,
-      "intereses": 0,
       "total": 165000
     },
     {
-      "concepto": "Administración parque acuático",
-      "saldoAnterior": 0,
-      "valorMes": 37000,
-      "intereses": 0,
+      "concepto": "Administración PA",
       "total": 37000
     },
     {
-      "concepto": "Seguro de áreas comunes",
-      "saldoAnterior": 70000,
-      "valorMes": 0,
-      "intereses": 0,
+      "concepto": "SAC",
       "total": 70000
+    },
+    {
+      "concepto": "Daños",
+      "total": 1000
+    },
+    {
+      "concepto": "Intereses de mora",
+      "total": 200
     }
   ],
-  "totalGeneral": 272000
+  "totalGeneral": 273200
 }
