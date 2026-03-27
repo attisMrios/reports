@@ -34,6 +34,10 @@ jobs:
           node-version: "20"
           cache: npm
 
+      # Node 20 trae npm 10; un lock generado con npm 11 puede hacer fallar `npm ci` (p. ej. @types/node).
+      - name: Usar npm 11 (mismo criterio de lockfile que en desarrollo típico)
+        run: npm install -g npm@11
+
       - name: Install dependencies
         run: npm ci
 
@@ -70,7 +74,7 @@ jobs:
           script: |
             set -e
             cd "${{ secrets.APP_DIR }}"
-            npm ci --omit=dev
+            npx --yes npm@11 ci --omit=dev
             if pm2 describe jsreport >/dev/null 2>&1; then
               pm2 reload ecosystem.config.cjs --update-env
             else

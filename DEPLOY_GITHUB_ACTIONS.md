@@ -123,10 +123,11 @@ En clientes conviene usar la base `https://reports.g360co.com` sin puerto `5488`
 
 El deploy **solo se ejecuta a mano**: `Actions → Deploy jsreport → Run workflow` (elige rama si GitHub lo ofrece, p. ej. `main`) y confirma.
 
-El job ejecuta `npm ci` en el runner, sube archivos a `APP_DIR`, `npm ci --omit=dev` en el servidor y **`pm2 reload`** (o **`pm2 start`** la primera vez) con `ecosystem.config.cjs`.
+El job instala **npm 11** en el runner (Node 20 trae npm 10; el `package-lock.json` debe validarse con la misma familia de npm que usaste al generarlo, si no `npm ci` falla con *out of sync*). Luego `npm ci`, sube archivos a `APP_DIR`, en el servidor ejecuta **`npx npm@11 ci --omit=dev`** (sin depender de una instalación global de npm 11) y **`pm2 reload`** o **`pm2 start`**.
 
 ## 9) Notas importantes
 
+- **npm y el lockfile**: si al hacer `npm ci` local o en CI ves *package.json and package-lock.json are not in sync*, ejecuta `npm install` en tu máquina, commitea el `package-lock.json` y mantén en CI/servidor el uso de **npm 11** como en el workflow, o regenera el lock solo con **npm 10** y no mezcles criterios.
 - **fs-store**: `data/` es estado persistente; el workflow usa `rm: true` y **reemplaza** `APP_DIR`. Haz backup de `data/` o ajusta la estrategia de despliegue si no quieres perder plantillas entre deploys.
 - **Autenticación**: revisa `jsreport.config.json` antes de exponer el sitio (usuario/contraseña, `authentication.enabled`).
 - **Alternativa sin PM2**: `deploy/jsreport.service.example` con systemd y cambiar el último paso del workflow a `systemctl restart jsreport`.
