@@ -6,10 +6,27 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: REPORTS_SERVER
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Comprobar secrets de deploy
+        shell: bash
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          APP_DIR: ${{ secrets.APP_DIR }}
+        run: |
+          fail() { echo "::error::$1" >&2; exit 1; }
+          [ -n "${SSH_HOST// }" ] || fail "Falta el secret SSH_HOST (IP o hostname SSH). Debe estar en el environment REPORTS_SERVER."
+          [ -n "${SSH_USER// }" ] || fail "Falta el secret SSH_USER."
+          [ -n "${SSH_PRIVATE_KEY// }" ] || fail "Falta el secret SSH_PRIVATE_KEY (clave privada PEM)."
+          [ -n "${SSH_PORT// }" ] || fail "Falta el secret SSH_PORT (usa 22 si es el puerto por defecto)."
+          [ -n "${APP_DIR// }" ] || fail "Falta el secret APP_DIR (ruta absoluta en el servidor, ej. /var/www/jsreport)."
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
