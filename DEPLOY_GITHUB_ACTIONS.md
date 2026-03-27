@@ -68,9 +68,10 @@ pm2 save
 
 ## 5) Nginx: sitio y proxy a jsreport
 
-1. Copia `deploy/nginx-jsreport.conf.example` a `/etc/nginx/sites-available/reports.g360co.com` (ya viene con `server_name reports.g360co.com` y rutas Let's Encrypt para ese host).
-2. Si **aún no** tienes certificado SSL, deja temporalmente **solo** un bloque `listen 80` con `server_name reports.g360co.com` y `proxy_pass http://127.0.0.1:5488;` (sin redirección 301 ni bloque 443), certifica con certbot y luego unifica con el ejemplo completo o deja que certbot inserte SSL.
-3. Enlaza el sitio y recarga Nginx:
+El archivo `deploy/nginx-jsreport.conf.example` está pensado para copiarlo **tal cual** la primera vez: **solo puerto 80** y `proxy_pass` a jsreport. Así `nginx -t` no falla por certificados que aún no existen.
+
+1. Copia el ejemplo a `/etc/nginx/sites-available/reports.g360co.com`.
+2. Enlaza el sitio y recarga Nginx:
 
 ```bash
 sudo ln -sf /etc/nginx/sites-available/reports.g360co.com /etc/nginx/sites-enabled/
@@ -78,31 +79,30 @@ sudo nginx -t
 sudo systemctl reload nginx
 ```
 
-4. Con jsreport en PM2 (`pm2 status`), verifica en el servidor:
+3. Con jsreport en PM2 (`pm2 status`), verifica en el servidor:
 
 ```bash
 curl -sS -o /dev/null -w "%{http_code}\n" http://127.0.0.1:5488/
+curl -sS -o /dev/null -w "%{http_code}\n" -H "Host: reports.g360co.com" http://127.0.0.1/
 ```
 
 ## 6) Let's Encrypt (certificado TLS)
 
-Con Nginx sirviendo `reports.g360co.com` en el puerto 80:
+**Cuándo se solicita el certificado:** lo pides tú **una vez** (o certbot en modo interactivo), cuando el dominio ya resuelve a tu servidor y Nginx sirve el `server_name` en el puerto 80. No hace falta crear antes los `.pem` ni escribir a mano el bloque `listen 443` en el repo.
+
+Con plugin Nginx instalado (`python3-certbot-nginx`):
 
 ```bash
 sudo certbot --nginx -d reports.g360co.com
 ```
 
-Certbot añadirá o ajustará los bloques SSL. Los certificados suelen quedar en:
+Certbot valida por HTTP, **crea** los ficheros en `/etc/letsencrypt/live/reports.g360co.com/` y **modifica** el archivo del sitio en `sites-available` (añade SSL y, en general, redirección 80→443). Después de eso, revisa que el bloque `:443` siga teniendo el mismo `location /` con `proxy_pass` a `5488`; si certbot dejó un `443` mínimo, copia ahí las mismas directivas `proxy_*` que en el ejemplo.
 
-`/etc/letsencrypt/live/reports.g360co.com/`
-
-Renovación:
+**Renovación automática:** en Ubuntu viene programado `certbot renew` (timer/cron). Comprueba con:
 
 ```bash
 sudo certbot renew --dry-run
 ```
-
-Si el archivo de ejemplo usa `ssl_dhparam` y aún no existe, certbot puede crearlo en la primera emisión o puedes comentar esa línea hasta que exista.
 
 ## 7) URL pública del API jsreport
 
@@ -115,8 +115,7 @@ En clientes conviene usar la base `https://reports.g360co.com` sin puerto `5488`
 
 ## 8) Ejecutar deploy desde GitHub
 
-- Push a la rama `main`, o
-- `Actions → Deploy jsreport → Run workflow`.
+El deploy **solo se ejecuta a mano**: `Actions → Deploy jsreport → Run workflow` (elige rama si GitHub lo ofrece, p. ej. `main`) y confirma.
 
 El job ejecuta `npm ci` en el runner, sube archivos a `APP_DIR`, `npm ci --omit=dev` en el servidor y **`pm2 reload`** (o **`pm2 start`** la primera vez) con `ecosystem.config.cjs`.
 

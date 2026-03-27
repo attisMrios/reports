@@ -1,33 +1,34 @@
-# Sitio Nginx para jsreport en reports.g360co.com (HTTPS + proxy a jsreport).
-# Copia a: /etc/nginx/sites-available/reports.g360co.com
-# Enlaza: sudo ln -sf /etc/nginx/sites-available/reports.g360co.com /etc/nginx/sites-enabled/
+# reports.g360co.com — proxy a jsreport (fase inicial, SIN certificados todavía)
 #
-# Si aún no tienes certificado: empieza solo con el bloque :80 y proxy_pass a 5488,
-# luego ejecuta: sudo certbot --nginx -d reports.g360co.com
+# Copia a: /etc/nginx/sites-available/reports.g360co.com
+# Enlaza:  sudo ln -sf /etc/nginx/sites-available/reports.g360co.com /etc/nginx/sites-enabled/
+# Prueba:  sudo nginx -t && sudo systemctl reload nginx
+#
+# ── ¿Cuándo se crea el certificado? ─────────────────────────────────────────
+# NO pongas aquí rutas a fullchain.pem/privkey.pem hasta que existan: nginx
+# fallaría en nginx -t.
+#
+# Una vez DNS apunte a este servidor y este bloque :80 esté activo, ejecuta UNA vez:
+#   sudo certbot --nginx -d reports.g360co.com
+#
+# El plugin python3-certbot-nginx obtiene el certificado (desafío HTTP en el :80),
+# y reescribe el mismo archivo de sitio: añade listen 443 ssl, ssl_certificate,
+# ssl_certificate_key, y suele poner redirección 80→443. Tú no creas esos ficheros
+# PEM a mano; los genera certbot bajo /etc/letsencrypt/live/reports.g360co.com/
+#
+# ── Renovación ──────────────────────────────────────────────────────────────
+# En Ubuntu suele existir timer/cron de "certbot renew". No tienes que repetir el
+# comando salvo que cambies el dominio o borres el certificado.
+#
+# ── Tras certbot ────────────────────────────────────────────────────────────
+# Abre de nuevo este archivo en el servidor y comprueba que el bloque :443 incluye
+# el mismo proxy_pass y cabeceras que abajo. Si certbot dejó el 443 mínimo,
+# copia el bloque location / aquí al server 443.
 
 server {
     listen 80;
     listen [::]:80;
     server_name reports.g360co.com;
-
-    location /.well-known/acme-challenge/ {
-        root /var/www/certbot;
-    }
-
-    location / {
-        return 301 https://$host$request_uri;
-    }
-}
-
-server {
-    listen 443 ssl http2;
-    listen [::]:443 ssl http2;
-    server_name reports.g360co.com;
-
-    ssl_certificate /etc/letsencrypt/live/reports.g360co.com/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/reports.g360co.com/privkey.pem;
-    include /etc/letsencrypt/options-ssl-nginx.conf;
-    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
     client_max_body_size 25m;
 
@@ -44,3 +45,5 @@ server {
         proxy_send_timeout 120s;
     }
 }
+
+# No añadas bloque listen 443 aquí en el repo: lo insertará certbot --nginx.
