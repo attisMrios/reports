@@ -4,17 +4,23 @@
 
 El workflow en `.github/workflows/deploy.yml` sube el código por SSH y reinicia la app con **PM2**. En producción se expone **HTTPS con Nginx** y **Let's Encrypt**; jsreport queda detrás del proxy en `127.0.0.1:5488` (puerto en `jsreport.config.json`).
 
-## 1) Secrets requeridos en GitHub
+## 1) Environment y secrets en GitHub
 
-En el repositorio: `Settings → Secrets and variables → Actions`.
+El job del workflow usa el **environment** `REPORTS_SERVER` (definido en `Settings → Environments`).
+
+En ese environment debes crear estos **Environment secrets**: `Settings → Environments` → **REPORTS_SERVER** → *Environment secrets*:
 
 | Secret | Descripción |
 |--------|-------------|
-| `SSH_HOST` | IP o dominio del servidor (para SSH) |
+| `SSH_HOST` | IP o dominio del servidor SSH |
 | `SSH_PORT` | Puerto SSH (normalmente `22`) |
 | `SSH_USER` | Usuario SSH |
 | `SSH_PRIVATE_KEY` | Llave privada en formato PEM |
 | `APP_DIR` | Ruta del proyecto en el servidor, p. ej. `/var/www/jsreport` |
+
+Si el environment `REPORTS_SERVER` tiene **reglas de protección** (revisores, timer), el deploy manual puede quedar pendiente de aprobación; es esperado.
+
+Si aparece **`Error: missing server host`**, revisa que **`SSH_HOST`** exista en el environment `REPORTS_SERVER` y no esté vacío.
 
 ## 2) DNS y firewall
 
@@ -42,7 +48,7 @@ No abras el puerto `5488` al público si Nginx hace de proxy en 80/443; jsreport
 
 ## 3) Dependencias en el servidor (una sola vez)
 
-- Node.js LTS (recomendado v20), alineado con el workflow.
+- **Node.js 20 LTS** (alineado con GitHub Actions y con `jsreport` fijado en **4.10.1**; versiones más nuevas de jsreport 4.x pueden exigir Node 22). Comprueba con `node -v`.
 - `npm` (viene con Node).
 - PM2 global: `sudo npm install -g pm2`
 - Nginx y Certbot:

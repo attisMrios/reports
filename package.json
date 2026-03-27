@@ -1,5 +1,8 @@
 {
   "name": "jsreport-server",
+  "engines": {
+    "node": ">=20"
+  },
   "main": "server.js",
   "scripts": {
     "start": "node server",
@@ -9,6 +12,6 @@
     "entryPoint": "server.js"
   },
   "dependencies": {
-    "jsreport": "^4.10.1"
+    "jsreport": "4.10.1"
   }
 }
